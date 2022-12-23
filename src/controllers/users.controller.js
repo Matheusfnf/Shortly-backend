@@ -84,18 +84,18 @@ class Users {
 
       const obj = {};
 
-      tesorado.map((batata) => {
-        if (obj[batata.id]?.length < 1 || !obj[batata.id]) {
-          obj[batata.id] = {
-            id: batata.id,
-            name: batata.name,
+      tesorado.map((row) => {
+        if (obj[row.id]?.length < 1 || !obj[row.id]) {
+          obj[row.id] = {
+            id: row.id,
+            name: row.name,
             linksCount: 1,
-            visitCount: Number([batata.visitCount]),
+            visitCount: Number([row.visitCount]),
           };
         } else {
-          console.log(batata);
-          obj[batata.id].visitCount += Number(batata.visitCount);
-          obj[batata.id].linksCount += 1;
+          console.log(row);
+          obj[row.id].visitCount += Number(row.visitCount);
+          obj[row.id].linksCount += 1;
         }
       });
 
