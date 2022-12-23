@@ -6,13 +6,14 @@ class Urls {
   async store(req, res) {
     const { url } = req.body;
     const modelID = nanoid(6);
+    const { id, email} = req.user;
 
     if (!url) return res.status(400).json({ error: "URL nao informada" });
 
     try {
       const response = await connection.query(
-        'INSERT INTO urls (url, "shortUrl") VALUES ($1, $2)',
-        [url, modelID]
+        'INSERT INTO urls (url, "shortUrl", "userId", "userSignature") VALUES ($1, $2, $3, $4)',
+        [url, modelID, id, email]
       );
       return res.status(201).send({ shortUrl: modelID });
     } catch (err) {
@@ -55,6 +56,7 @@ class Urls {
       if (url.rows.length < 1)
         return res.status(404).json({ error: "URL NOT FOUND" });
       const sum = url.rows[0].visitCount + 1;
+
       await connection.query(
         `UPDATE urls SET "visitCount" = $1 WHERE id = $2`,
         [sum, url.rows[0].id]
@@ -69,6 +71,8 @@ class Urls {
   async deleteURL(req, res) {
     const { id } = req.params;
     if (!id) return res.status(400).json({ error: "id não informado" });
+    
+    
 
     try {
       const url = await connection.query(`DELETE FROM urls WHERE id=$1`, [id]);
